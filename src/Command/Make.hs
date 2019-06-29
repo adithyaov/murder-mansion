@@ -20,12 +20,12 @@ run :: Command -> GameEnv ()
 run (Make ExitKey) = do
   g@(Game _ _ _ eM _) <- get
   let moldAndSteelAvailable = isAvailable Steel g && isAvailable Mold g
-      furnaceAvailable = isAvailable FireRoom g
+      furnaceAvailable = isAvailable Furnace g
       oilAndLighterAvailable = isAvailable Oil g && isAvailable Lighter g
       haveEverything = moldAndSteelAvailable && furnaceAvailable && oilAndLighterAvailable
       nEM = Map.insert Mold None
           . Map.insert Steel None
-          . Map.insert None
+          . Map.insert Oil None
           . Map.insert ExitKey Bag
           $ eM
   when haveEverything $ do
@@ -37,9 +37,9 @@ run (Make ExitKey) = do
       "Can't make the lock, few ingriedients are missing."
 run (Make Mold) = do
   g@(Game _ _ _ eM _) <- get
-  let clayAvailable = isAvailable Clay
-      gasZAvailable = isAvailable GasZ
-      chemChamberAvailable = isAvailable ChemicalChamber
+  let clayAvailable = isAvailable Clay g
+      gasZAvailable = isAvailable GasZ g
+      chemChamberAvailable = isAvailable ChemicalChamber g
       haveEverything = clayAvailable && gasZAvailable && chemChamberAvailable
       nEM = Map.insert Mold Bag
           . Map.insert Clay None

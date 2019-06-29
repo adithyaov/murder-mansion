@@ -32,7 +32,7 @@ run (PickUp x) = do
       "Unable to pick up the item. It either not pickable or is not in the room."
 run (Drop x) = do
   g@(Game _ _ _ eM _) <- get
-  let inBag = eM ! x == Location.Bag
+  let inBag = eM ! x == Bag
   when inBag $ do
     tellN "Dropped the item. You can pick it from here if you ever need it."
     put $ dropItem x g

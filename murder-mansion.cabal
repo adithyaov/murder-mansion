@@ -25,6 +25,8 @@ executable murder-mansion
                      , Command.Bag
                      , Command.Movement
                      , Command.Make
+                     , Command.Hide
+                     , Command.Switch
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
                      , containers
