@@ -10,7 +10,7 @@ data Game = Game
   { player :: House
   , visibility :: Bool
   , murderer :: House
-  , elementMap :: Map ElementID Location
+  , elementMap :: Map Element Location
   }
 
 type GameEnv = RWS () String Game

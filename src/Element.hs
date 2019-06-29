@@ -1,13 +1,16 @@
 module Element where
 
-type ElementID = String
+data Color = Red | Blue | Green deriving (Ord, Show, Eq)
 
-storageKey = "storage key"
-exitKey = "exit key"
+data Element = StorageKey | ExitKey | Table Color | Cabinet Color deriving (Eq, Ord)
 
-toElementID :: String -> ElementID
-toElementID x = x
+storageKey = StorageKey
+exitKey = ExitKey
 
-isPickable :: ElementID -> Bool
+toElement :: String -> Element
+toElement "storage key" = StorageKey
+toElement "exit key" = ExitKey
+
+isPickable :: Element -> Bool
 isPickable = const True
 

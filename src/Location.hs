@@ -28,4 +28,4 @@ data House
   | GeneratorRoom
   | CircutRoom
   | Exit
-    deriving (Eq, Ord)
+    deriving (Eq, Ord, Show)
