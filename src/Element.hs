@@ -45,4 +45,15 @@ toElement "chemical chamber" = ChemicalChamber
 toElement _ = error "Invalid element"
 
 isPickable :: Element -> Bool
-isPickable = const True
+isPickable StorageKey = True
+isPickable ExitKey = True
+isPickable (Table _) = False
+isPickable (Cabinet _) = False
+isPickable Generator = False
+isPickable Furnace = False
+isPickable Oil = True
+isPickable Lighter = True
+isPickable Steel = True
+isPickable GasZ = True
+isPickable Clay = True
+isPickable ChemicalChamber = False
