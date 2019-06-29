@@ -17,7 +17,7 @@ parse _ = Nothing
 
 run :: Command -> Game -> Maybe Game
 run (PickUp x) g@(Game p _ eM)
-  | eM ! x == p && isPickable x = Just . pickItem x $ g
+  | eM ! x == H p && isPickable x = Just . pickItem x $ g
   | otherwise = Nothing
 run (Drop x) g@(Game p _ eM)
   | eM ! x == Bag = Just . dropItem x $ g
@@ -29,6 +29,6 @@ pickItem x (Game p m eM) = Game p m eM'
 
 dropItem x (Game p m eM) = Game p m eM'
   where
-    eM' = Map.insert x p eM
+    eM' = Map.insert x (H p) eM
 
 

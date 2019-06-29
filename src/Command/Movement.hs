@@ -4,6 +4,7 @@ import Game
 import Location
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
+import Data.Map ((!))
 
 data Command = North | South | East | West | Up | Down
 
@@ -55,8 +56,20 @@ moveC Down (x, y, z) = (x, y, z - 1)
 
 moveL :: Command -> House -> Maybe House
 moveL c x = Bimap.lookupR x positions >>= Just . moveC c >>= flip Bimap.lookup positions
-  
 
+run :: Command -> Game -> Maybe Game
+run c (Game p m eM) = do
+  nL <- moveL c p
+  let mNG = Just (Game nL m eM)
+  case (p, nL) of
+    (StorageRoom, _) -> if storageCheck then mNG else Nothing
+    (_, StorageRoom) -> if storageCheck then mNG else Nothing
+    (_, Exit) -> if exitCheck then mNG else Nothing
+    _ -> mNG
+  where
+    storageCheck = eM ! "storage key" == Location.Bag
+    exitCheck = eM ! "exit key" == Location.Bag
+  
 
 
 

@@ -1,13 +1,13 @@
 module Game where
 
 import Location
-import Data.Map
+import Data.Map (Map)
+import qualified Data.Map as Map
 import Element
-import Data.Set
 
 data Game = Game
-  { player :: Location
-  , murderer :: Location
+  { player :: House
+  , murderer :: House
   , elementMap :: Map ElementID Location
   }
 
