@@ -1,11 +1,11 @@
 module Game where
 
-import BP
+import Location
 import Data.Map
-import Element.Internal
+import Element
 import Data.Set
 
-data Game = Interactable e => Game
+data Game = Game
   { player :: Location
   , murderer :: Location
   , elementMap :: Map ElementID Location

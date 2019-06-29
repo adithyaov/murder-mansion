@@ -2,11 +2,12 @@ module Command.Movement where
 
 import Game
 import Location
+import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 
 data Command = North | South | East | West | Up | Down
 
-parse :: [String] -> Just Command
+parse :: [String] -> Maybe Command
 parse [x]
   | x == "north" = Just North
   | x == "south" = Just South
@@ -17,8 +18,8 @@ parse [x]
   | otherwise = Nothing
 parse _ = Nothing
 
-position :: Bimap ((Int, Int, Int), House)
-position =
+positions :: Bimap (Int, Int, Int) House
+positions = Bimap.fromList
   [ ((0, 0, 0), LivingArea)
   , ((0, 1, 0), Pool)
   , ((1, 0, 0), TreeHouseGroundFloor)
@@ -52,8 +53,8 @@ moveC West (x, y, z) = (x - 1, y, z)
 moveC Up (x, y, z) = (x, y, z + 1)
 moveC Down (x, y, z) = (x, y, z - 1)
 
-moveL :: Command -> House -> Just House
-moveL c x = (moveC c <$> Bimap.lookupR x position) >>= Bimap.lookup
+moveL :: Command -> House -> Maybe House
+moveL c x = Bimap.lookupR x positions >>= Just . moveC c >>= flip Bimap.lookup positions
   
 
 

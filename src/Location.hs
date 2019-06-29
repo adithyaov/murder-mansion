@@ -1,6 +1,6 @@
 module Location where
 
-data Location = H House | Bag | None
+data Location = H House | Bag | None deriving (Eq, Ord)
 
 -- The following are the locations in the house.
 data House
@@ -28,3 +28,4 @@ data House
   | GeneratorRoom
   | CircutRoom
   | Exit
+    deriving (Eq, Ord)

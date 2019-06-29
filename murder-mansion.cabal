@@ -18,8 +18,15 @@ extra-source-files:  CHANGELOG.md
 
 executable murder-mansion
   main-is:             Main.hs
-  -- other-modules:
+  other-modules:       Command
+                     , Element
+                     , Game
+                     , Location
+                     , Command.Bag
+                     , Command.Movement
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
+                     , containers
+                     , bimap
   hs-source-dirs:      src
   default-language:    Haskell2010
