@@ -59,10 +59,11 @@ moveL :: Command -> House -> Maybe House
 moveL c x = Bimap.lookupR x positions >>= Just . moveC c >>= flip Bimap.lookup positions
 
 run :: Command -> Game -> Maybe Game
-run c (Game p m eM) = do
+run c (Game p v m eM) = do
   nL <- moveL c p
-  let mNG = Just (Game nL m eM)
-  case (p, nL) of
+  let mNG = Just (Game nL v m eM)
+  if not visibilityCheck then Nothing
+  else case (p, nL) of
     (StorageRoom, _) -> if storageCheck then mNG else Nothing
     (_, StorageRoom) -> if storageCheck then mNG else Nothing
     (_, Exit) -> if exitCheck then mNG else Nothing
@@ -70,6 +71,7 @@ run c (Game p m eM) = do
   where
     storageCheck = eM ! storageKey == Location.Bag
     exitCheck = eM ! exitKey == Location.Bag
+    visibilityCheck = v
   
 
 
