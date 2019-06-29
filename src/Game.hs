@@ -14,7 +14,7 @@ data Game = Game
   , electricity :: Bool
   }
 
-type GameEnv = RWS () String Game
+type GameEnv = RWST () String Game IO
 
 initialPlayerLocation = LivingArea
 
