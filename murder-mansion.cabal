@@ -27,6 +27,7 @@ executable murder-mansion
                      , Command.Make
                      , Command.Hide
                      , Command.Switch
+                     , Player
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
                      , containers

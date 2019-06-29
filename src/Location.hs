@@ -4,7 +4,7 @@ data Location
   = H House
   | Bag
   | None
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 -- The following are the locations in the house.
 data House

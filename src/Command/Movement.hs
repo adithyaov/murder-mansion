@@ -18,7 +18,7 @@ data Command
   | Down
 
 parse :: [String] -> Maybe Command
-parse [x]
+parse ["go", x]
   | x == "north" = Just North
   | x == "south" = Just South
   | x == "east" = Just East

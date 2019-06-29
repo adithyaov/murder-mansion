@@ -12,7 +12,7 @@ data Game = Game
   , murderer :: House
   , elementMap :: Map Element Location
   , electricity :: Bool
-  }
+  } deriving (Show)
 
 type GameEnv = RWST () String Game IO
 

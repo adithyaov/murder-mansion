@@ -20,7 +20,7 @@ data Element
   | Clay
   | ChemicalChamber
   | Mold
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 storageKey = StorageKey
 
