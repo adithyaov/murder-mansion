@@ -6,12 +6,12 @@ import Element
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
 
-data Command = PickUp String | Drop String
+data Command = PickUp ElementID | Drop ElementID
 
 parse :: [String] -> Maybe Command
 parse (x:y:xs)
-  | x ++ y == "pickup" = Just . PickUp . unwords $ xs 
-  | x == "drop" = Just . Drop . unwords $ (y:xs)
+  | x ++ y == "pickup" = Just . PickUp . toElementID . unwords $ xs 
+  | x == "drop" = Just . Drop . toElementID . unwords $ (y:xs)
   | otherwise = Nothing
 parse _ = Nothing
 

@@ -5,6 +5,7 @@ import Location
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 import Data.Map ((!))
+import Element
 
 data Command = North | South | East | West | Up | Down
 
@@ -67,8 +68,8 @@ run c (Game p m eM) = do
     (_, Exit) -> if exitCheck then mNG else Nothing
     _ -> mNG
   where
-    storageCheck = eM ! "storage key" == Location.Bag
-    exitCheck = eM ! "exit key" == Location.Bag
+    storageCheck = eM ! storageKey == Location.Bag
+    exitCheck = eM ! exitKey == Location.Bag
   
 
 
