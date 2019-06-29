@@ -8,36 +8,48 @@ import Element
 import Game
 import Location
 
-newtype Make = Make Element
+newtype Command = Make Element
 
 parse :: [String] -> Maybe Command
 parse (x:xs)
-  | x == "make" = Just . Make . toElement . unwords $ xs
+  | x == "make" = fmap Make $ toElement . unwords $ xs
+  | otherwise = Nothing
 parse _ = Nothing
 
 run :: Command -> GameEnv ()
-run (PickUp x) = do
-  g@(Game p _ _ eM _) <- get
-  let inLocationAndPickable = eM ! x == H p && isPickable x
-  when inLocationAndPickable $ do
-    tellN
-      "Picked up the item. You can now use this to make new items or unlock new paths."
-    put $ pickItem x g
-  unless inLocationAndPickable $
-    tellN
-      "Unable to pick up the item. It either not pickable or is not in the room."
-run (Drop x) = do
+run (Make ExitKey) = do
   g@(Game _ _ _ eM _) <- get
-  let inBag = eM ! x == Location.Bag
-  when inBag $ do
-    tellN "Dropped the item. You can pick it from here if you ever need it."
-    put $ dropItem x g
-    unless inBag $ tell "Ah! You cannot drop something that you do not have"
-
-pickItem x (Game p v m eM e) = Game p v m eM' e
-  where
-    eM' = Map.insert x Bag eM
-
-dropItem x (Game p v m eM e) = Game p v m eM' e
-  where
-    eM' = Map.insert x (H p) eM
+  let moldAndSteelAvailable = isAvailable Steel g && isAvailable Mold g
+      furnaceAvailable = isAvailable FireRoom g
+      oilAndLighterAvailable = isAvailable Oil g && isAvailable Lighter g
+      haveEverything = moldAndSteelAvailable && furnaceAvailable && oilAndLighterAvailable
+      nEM = Map.insert Mold None
+          . Map.insert Steel None
+          . Map.insert None
+          . Map.insert ExitKey Bag
+          $ eM
+  when haveEverything $ do
+    tellN
+      "Finally, Made the exit key. I need to get out of this place ASAP!"
+    put $ g { elementMap = nEM }
+  unless haveEverything $
+    tellN
+      "Can't make the lock, few ingriedients are missing."
+run (Make Mold) = do
+  g@(Game _ _ _ eM _) <- get
+  let clayAvailable = isAvailable Clay
+      gasZAvailable = isAvailable GasZ
+      chemChamberAvailable = isAvailable ChemicalChamber
+      haveEverything = clayAvailable && gasZAvailable && chemChamberAvailable
+      nEM = Map.insert Mold Bag
+          . Map.insert Clay None
+          . Map.insert GasZ None
+          $ eM
+  when haveEverything $ do
+    tellN
+      "Made the mold. A step closer to freedom."
+    put $ g { elementMap = nEM }
+  unless haveEverything $
+    tellN
+      "Can't make mold, few ingriedients are missing."
+run _ = tell "Nope, Can't make that in this life."

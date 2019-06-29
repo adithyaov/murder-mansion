@@ -19,30 +19,32 @@ data Element
   | GasZ
   | Clay
   | ChemicalChamber
+  | Mold
   deriving (Eq, Ord)
 
 storageKey = StorageKey
 
 exitKey = ExitKey
 
-toElement :: String -> Element
-toElement "storage key" = StorageKey
-toElement "exit key" = ExitKey
-toElement "red table" = Table Red
-toElement "green table" = Table Green
-toElement "blue table" = Table Blue
-toElement "red cabinet" = Cabinet Red
-toElement "green cabinet" = Cabinet Green
-toElement "blue cabinet" = Cabinet Blue
-toElement "generator" = Generator
-toElement "furnace" = Furnace
-toElement "oil" = Oil
-toElement "lighter" = Lighter
-toElement "steel" = Steel
-toElement "gas z" = GasZ
-toElement "clay" = Clay
-toElement "chemical chamber" = ChemicalChamber
-toElement _ = error "Invalid element"
+toElement :: String -> Maybe Element
+toElement "storage key" = Just StorageKey
+toElement "exit key" = Just ExitKey
+toElement "red table" = Just (Table Red)
+toElement "green table" = Just (Table Green)
+toElement "blue table" = Just (Table Blue)
+toElement "red cabinet" = Just (Cabinet Red)
+toElement "green cabinet" = Just (Cabinet Green)
+toElement "blue cabinet" = Just (Cabinet Blue)
+toElement "generator" = Just Generator
+toElement "furnace" = Just Furnace
+toElement "oil" = Just Oil
+toElement "lighter" = Just Lighter
+toElement "steel" = Just Steel
+toElement "gas z" = Just GasZ
+toElement "clay" = Just Clay
+toElement "chemical chamber" = Just ChemicalChamber
+toElement "mold" = Just Mold
+toElement _ = Nothing
 
 isPickable :: Element -> Bool
 isPickable StorageKey = True
@@ -57,3 +59,4 @@ isPickable Steel = True
 isPickable GasZ = True
 isPickable Clay = True
 isPickable ChemicalChamber = False
+isPickable Mold = True

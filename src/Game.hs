@@ -1,7 +1,7 @@
 module Game where
 
 import Control.Monad.Trans.RWS.Strict
-import Data.Map (Map)
+import Data.Map (Map, (!))
 import qualified Data.Map as Map
 import Element
 import Location
@@ -27,6 +27,7 @@ initialElectricity = False
 initialElementLocation =
   Map.fromList
     [ (ExitKey, None)
+    , (Mold, None)
     , (StorageKey, H HomeTheater)
     , (Table Red, H PlayRoom)
     , (Table Red, H TreeHouseFirstFloor)
@@ -52,5 +53,9 @@ initialGame =
     initialMurdererLocation
     initialElementLocation
     initialElectricity
+
+isAvailable :: Element -> Game -> Bool
+isAvailable x (Game p _ _ eM _) =
+  (eM ! x == H p) || (eM ! x == Bag) 
 
 tellN w = tell "\n" >> tell w

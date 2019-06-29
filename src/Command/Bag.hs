@@ -14,8 +14,8 @@ data Command
 
 parse :: [String] -> Maybe Command
 parse (x:y:xs)
-  | x ++ y == "pickup" = Just . PickUp . toElement . unwords $ xs
-  | x == "drop" = Just . Drop . toElement . unwords $ (y : xs)
+  | x ++ y == "pickup" = fmap PickUp $ toElement . unwords $ xs
+  | x == "drop" = fmap Drop $ toElement . unwords $ (y : xs)
   | otherwise = Nothing
 parse _ = Nothing
 
