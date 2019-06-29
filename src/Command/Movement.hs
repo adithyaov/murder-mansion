@@ -1,13 +1,13 @@
 module Command.Movement where
 
+import Control.Monad (unless, when)
+import Control.Monad.Trans.RWS.Strict
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 import Data.Map ((!))
 import Element
 import Game
 import Location
-import Control.Monad.Trans.RWS.Strict
-import Control.Monad (unless, when)
 
 data Command
   = North
@@ -53,7 +53,7 @@ positions =
     , ((-1, 0, 3), BalconyThirdFloor)
     , ((0, 0, 4), HallwayFourthFloor)
     , ((1, 0, 4), GeneratorRoom)
-    , ((1, 1, 4), CircutRoom)
+    , ((1, 1, 4), ChemistryLab)
     , ((0, -1, 0), Exit)
     ]
 
@@ -71,14 +71,14 @@ moveL c x =
 
 run :: Command -> GameEnv ()
 run c = do
-  (Game p v m eM) <- get
+  (Game p v m eM e) <- get
   let storageCheck = eM ! storageKey == Location.Bag
       exitCheck = eM ! exitKey == Location.Bag
       visibilityCheck = v
       successRun nL = do
-        put $ Game nL v m eM
+        put $ Game nL v m eM e
         tellN . show $ nL
-      runStorageRoom nL = do 
+      runStorageRoom nL = do
         when storageCheck $ successRun nL
         unless storageCheck $ tellN "Oops, You don't have the storage key"
   unless visibilityCheck $
@@ -91,6 +91,3 @@ run c = do
       when exitCheck $ successRun Exit
       unless exitCheck $ tellN "Oops, You don't have the exit key"
     (_, Just nL) -> successRun nL
-
-
-

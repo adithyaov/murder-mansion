@@ -21,7 +21,7 @@ parse _ = Nothing
 
 run :: Command -> GameEnv ()
 run (PickUp x) = do
-  g@(Game p _ _ eM) <- get
+  g@(Game p _ _ eM _) <- get
   let inLocationAndPickable = eM ! x == H p && isPickable x
   when inLocationAndPickable $ do
     tellN
@@ -31,17 +31,17 @@ run (PickUp x) = do
     tellN
       "Unable to pick up the item. It either not pickable or is not in the room."
 run (Drop x) = do
-  g@(Game _ _ _ eM) <- get
+  g@(Game _ _ _ eM _) <- get
   let inBag = eM ! x == Location.Bag
   when inBag $ do
     tellN "Dropped the item. You can pick it from here if you ever need it."
     put $ dropItem x g
     unless inBag $ tell "Ah! You cannot drop something that you do not have"
 
-pickItem x (Game p v m eM) = Game p v m eM'
+pickItem x (Game p v m eM e) = Game p v m eM' e
   where
     eM' = Map.insert x Bag eM
 
-dropItem x (Game p v m eM) = Game p v m eM'
+dropItem x (Game p v m eM e) = Game p v m eM' e
   where
     eM' = Map.insert x (H p) eM
