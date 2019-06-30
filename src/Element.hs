@@ -20,11 +20,30 @@ data Element
   | Clay
   | ChemicalChamber
   | Mold
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord)
 
 storageKey = StorageKey
 
 exitKey = ExitKey
+
+instance Show Element where
+  show StorageKey = "storage key"
+  show Just ExitKey = "exit key"
+  show (Table Red) = "red table"
+  show (Table Green) = "green table"
+  show (Table Blue) = "blue table"
+  show (Cabinet Red) = "red cabinet"
+  show (Cabinet Green) = "green cabinet"
+  show (Cabinet Blue) = "blue cabinet"
+  show Generator = "generator"
+  show Furnace = "furnace"
+  show Oil = "oil"
+  show Lighter = "lighter"
+  show Steel = "steel"
+  show GasZ = "gas z"
+  show Clay = "clay"
+  show ChemicalChamber = "chemical chamber"
+  show Mold = "mold"
 
 toElement :: String -> Maybe Element
 toElement "storage key" = Just StorageKey

@@ -84,7 +84,7 @@ run c = do
   unless visibilityCheck $
     tellN "Can't move when hidden, Leave the hiding place first"
   case (p, moveL c p) of
-    (_, Nothing) -> tellN "Moving out of bounds."
+    (_, Nothing) -> tellN "Moving out of bounds. Can't move here."
     (StorageRoom, Just nL) -> runStorageRoom nL
     (_, Just StorageRoom) -> runStorageRoom StorageRoom
     (_, Just Exit) -> do
