@@ -2,7 +2,7 @@ module Player where
 
 import Command
 import Control.Monad.Trans.RWS.Strict
-import Game
+import Game.Internal
 
 playerTurn :: Game -> IO Game
 playerTurn s = do
@@ -19,5 +19,4 @@ playerTurn s = do
 loopPlayerTurn :: Game -> IO Game
 loopPlayerTurn s = do
   sN <- playerTurn s
-  print sN
   loopPlayerTurn sN

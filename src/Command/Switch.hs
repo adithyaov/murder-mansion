@@ -1,7 +1,7 @@
 module Command.Switch where
 
 import Control.Monad.Trans.RWS.Strict
-import Game
+import Game.Internal
 
 data Command = TurnOn Element | TurnOff Element
 
@@ -18,9 +18,9 @@ run :: Command -> GameEnv ()
 run (TurnOn Generator) = do
   g <- get
   put $ g { electricity = True }
-  tellN "The electricity is now swictched on."
+  mytell "The electricity is now swictched on."
 run (TurnOff Generator) = do
   g <- get
   put $ g { electricity = False }
-  tellN "The electricity is now swictched off."
-run _ = tell "Nope, Can't turn that on."
+  mytell "The electricity is now swictched off."
+run _ = mytell "Nope, Can't turn that on."

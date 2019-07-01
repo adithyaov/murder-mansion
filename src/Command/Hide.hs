@@ -2,7 +2,7 @@ module Command.Hide where
 
 import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
-import Game
+import Game.Internal
 
 data Command = Hide Element | Unhide
 
@@ -26,8 +26,8 @@ run :: Command -> GameEnv ()
 run c = do
   g <- get
   put $ g { visibility = False }
-  tell . success $ c
+  mytell . success $ c
 run c@Unhide = do
   g <- get
   put $ g { visibility = True }
-  tell . success $ c
+  mytell . success $ c

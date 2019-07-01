@@ -4,7 +4,7 @@ import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Game
+import Game.Internal
 
 data Command
   = PickUp Element
@@ -29,16 +29,16 @@ run c@(PickUp x) = do
   let inLocationAndPickable = eM ! x == H p && isPickable x
   when inLocationAndPickable $ do
     put $ pickItem x g
-    tell . success $ c
+    mytell . success $ c
   unless inLocationAndPickable $
-    tell . failuer $ c
+    mytell . failuer $ c
 run c@(Drop x) = do
   g@(Game _ _ _ eM _) <- get
   let inBag = eM ! x == Bag
   when inBag $ do
     put $ dropItem x g
-    tell . success $ c
-    unless inBag $ tell . failuer $ c
+    mytell . success $ c
+    unless inBag $ mytell . failuer $ c
 
 pickItem x (Game p v m eM e) = Game p v m eM' e
   where

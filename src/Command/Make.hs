@@ -4,7 +4,7 @@ import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Game
+import Game.Internal
 
 newtype Command = Make Element
 
@@ -30,8 +30,8 @@ run c@(Make ExitKey) = do
           $ eM
   when haveEverything $ do
     put $ g { elementMap = nEM }
-    tell . success $ c
-  unless haveEverything $ tell . failuer $ c
+    mytell . success $ c
+  unless haveEverything $ mytell . failuer $ c
 run c@(Make Mold) = do
   g@(Game _ _ _ eM _) <- get
   let clayAvailable = isAvailable Clay g
@@ -44,6 +44,6 @@ run c@(Make Mold) = do
           $ eM
   when haveEverything $ do
     put $ g { elementMap = nEM }
-    tell . success $ c
-  unless haveEverything $ tell . failuer $ c
-run c = tell . failuer $ c
+    mytell . success $ c
+  unless haveEverything $ mytell . failuer $ c
+run c = mytell . failuer $ c

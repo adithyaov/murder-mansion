@@ -1,5 +1,5 @@
-module Game
-  ( module Game
+module Game.Internal
+  ( module Game.Internal
   , module Asset
   ) where
 
@@ -59,4 +59,13 @@ initialGame =
 isAvailable :: Element -> Game -> Bool
 isAvailable x (Game p _ _ eM _) = (eM ! x == H p) || (eM ! x == Bag)
 
-tellN w = tell "\n" >> tell w
+describe :: House -> GameEnv ()
+describe r = do
+  (Game _ _ _ eM _) <- get
+  let elmFind k y a
+        | y == H r = k : a
+        | otherwise = a
+      desc x = fromAsset x ++ ": " ++ info x
+  sequence_ $ mytell . desc <$> Map.foldrWithKey elmFind [] eM
+
+mytell w = tell w >> tell "\n" 

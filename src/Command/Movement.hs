@@ -6,7 +6,7 @@ import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 import Data.Map ((!))
 import Data.Map as Map
-import Game
+import Game.Internal
 import Map (positions)
 
 data Command
@@ -20,15 +20,6 @@ data Command
 instance ResponseMessage Command where
   success _ = "successfully moved."
   failuer _ = "failed to move, there is no path here."
-
-describe :: House -> GameEnv ()
-describe r = do
-  (Game _ _ _ eM _) <- get
-  let elmFind k y a
-        | y == H r = k:a 
-        | otherwise = a
-      desc x = fromAsset x ++ ": " ++ info x
-  sequence_ $ tell . desc <$> Map.foldrWithKey elmFind [] eM
 
 parse :: [String] -> Maybe Command
 parse ["go", x]
@@ -61,21 +52,21 @@ run c = do
       visibilityCheck = v
       successRun nL = do
         put $ Game nL v m eM e
-        tell . success $ c
-        tell $ "you're currently in " ++ fromAsset nL
-        tell "the following are the items in the room."
+        mytell . success $ c
+        mytell $ "you're currently in " ++ fromAsset nL
+        mytell . info $ nL
+        mytell "the following are the items in the room."
         describe nL
-        tell . info $ nL
       runStorageRoom nL = do
         when storageCheck $ successRun nL
-        unless storageCheck $ tell . info . InGameError $ UnavailableAssetsError
+        unless storageCheck $ mytell . info . InGameError $ UnavailableAssetsError
   unless visibilityCheck $
-    tell . info . InGameError $ HiddenError 
+    mytell . info . InGameError $ HiddenError
   case (p, moveL c p) of
-    (_, Nothing) -> tell . failuer $ c
+    (_, Nothing) -> mytell . failuer $ c
     (StorageRoom, Just nL) -> runStorageRoom nL
     (_, Just StorageRoom) -> runStorageRoom StorageRoom
     (_, Just Exit) -> do
       when exitCheck $ successRun Exit
-      unless exitCheck $ tell . info . InGameError $ UnavailableAssetsError
+      unless exitCheck $ mytell . info . InGameError $ UnavailableAssetsError
     (_, Just nL) -> successRun nL

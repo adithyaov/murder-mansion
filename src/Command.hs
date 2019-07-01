@@ -5,7 +5,7 @@ import qualified Command.Hide as Hide
 import qualified Command.Make as Make
 import qualified Command.Movement as Movement
 import qualified Command.Switch as Switch
-import Game
+import Game.Internal
 
 data Command
   = CMo Movement.Command
