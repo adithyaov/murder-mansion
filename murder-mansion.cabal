@@ -19,15 +19,17 @@ extra-source-files:  CHANGELOG.md
 executable murder-mansion
   main-is:             Main.hs
   other-modules:       Command
-                     , Element
                      , Game
-                     , Location
                      , Command.Bag
                      , Command.Movement
                      , Command.Make
                      , Command.Hide
                      , Command.Switch
                      , Player
+                     , Asset.Element
+                     , Asset.Internal
+                     , Asset.Location
+                     , Asset
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
                      , containers

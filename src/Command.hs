@@ -8,26 +8,26 @@ import qualified Command.Switch as Switch
 import Game
 
 data Command
-  = Mo Movement.Command
-  | B Bag.Command
-  | H Hide.Command
-  | Ma Make.Command
-  | S Switch.Command
+  = CMo Movement.Command
+  | CB Bag.Command
+  | CH Hide.Command
+  | CMa Make.Command
+  | CS Switch.Command
 
 lM :: Maybe a -> Maybe a -> Maybe a
 lM Nothing x = x
 lM x Nothing = x
 
 parse :: [String] -> Maybe Command
-parse x = lM (B <$> Bag.parse x)
-        . lM (Mo <$> Movement.parse x)
-        . lM (H <$> Hide.parse x)
-        . lM (Ma <$> Make.parse x)
-        . lM (S <$> Switch.parse x) $ Nothing
+parse x = lM (CB <$> Bag.parse x)
+        . lM (CMo <$> Movement.parse x)
+        . lM (CH <$> Hide.parse x)
+        . lM (CMa <$> Make.parse x)
+        . lM (CS <$> Switch.parse x) $ Nothing
 
 run :: Command -> GameEnv ()
-run (Mo x) = Movement.run x
-run (B x) = Bag.run x
-run (H x) = Hide.run x
-run (Ma x) = Make.run x
-run (S x) = Switch.run x
+run (CMo x) = Movement.run x
+run (CB x) = Bag.run x
+run (CH x) = Hide.run x
+run (CMa x) = Make.run x
+run (CS x) = Switch.run x

@@ -5,9 +5,7 @@ import Control.Monad.Trans.RWS.Strict
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 import Data.Map ((!))
-import Element
 import Game
-import Location
 
 data Command
   = North
@@ -72,22 +70,23 @@ moveL c x =
 run :: Command -> GameEnv ()
 run c = do
   (Game p v m eM e) <- get
-  let storageCheck = eM ! storageKey == Location.Bag
-      exitCheck = eM ! exitKey == Location.Bag
+  let storageCheck = eM ! StorageKey == Bag
+      exitCheck = eM ! ExitKey == Bag
       visibilityCheck = v
       successRun nL = do
         put $ Game nL v m eM e
-        tellN . show $ nL
+        tellN $ "you're currently in the " ++ show nL
+        tellN . info $ nL
       runStorageRoom nL = do
         when storageCheck $ successRun nL
-        unless storageCheck $ tellN "Oops, You don't have the storage key"
+        unless storageCheck $ tellN "oops, You don't have the storage key."
   unless visibilityCheck $
-    tellN "Can't move when hidden, Leave the hiding place first"
+    tellN "can't move when hidden, Leave the hiding place first."
   case (p, moveL c p) of
-    (_, Nothing) -> tellN "Moving out of bounds. Can't move here."
+    (_, Nothing) -> tellN "moving out of bounds. can't move here."
     (StorageRoom, Just nL) -> runStorageRoom nL
     (_, Just StorageRoom) -> runStorageRoom StorageRoom
     (_, Just Exit) -> do
       when exitCheck $ successRun Exit
-      unless exitCheck $ tellN "Oops, You don't have the exit key"
+      unless exitCheck $ tellN "oops, you don't have the exit key."
     (_, Just nL) -> successRun nL

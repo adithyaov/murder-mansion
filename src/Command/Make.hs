@@ -4,16 +4,12 @@ import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Element
 import Game
-import Location
 
 newtype Command = Make Element
 
 parse :: [String] -> Maybe Command
-parse (x:xs)
-  | x == "make" = fmap Make $ toElement . unwords $ xs
-  | otherwise = Nothing
+parse ("make":xs) = fmap Make $ toAsset . unwords $ xs
 parse _ = Nothing
 
 run :: Command -> GameEnv ()

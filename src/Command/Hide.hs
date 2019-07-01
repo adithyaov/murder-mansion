@@ -2,25 +2,18 @@ module Command.Hide where
 
 import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
-import Element
 import Game
-import Location
 
 data Command = Hide Element | Unhide
 
 parse :: [String] -> Maybe Command
-parse [x] =
-  case x of
-    "unhide" -> Just Unhide
+parse ["unhide"] = Just Unhide
+parse ("hide":y:xs) = do
+  e <- toAsset . unwords $ xs
+  case (y, e) of
+    ("under", Table _) -> Just . Hide $ e
+    ("inside", Cabinet _) -> Just . Hide $ e
     _ -> Nothing
-parse (x:y:xs)
-  | x == "hide" = do
-      e <- toElement . unwords $ xs
-      case (y, e) of
-        ("under", Table _) -> Just . Hide $ e
-        ("inside", Cabinet _) -> Just . Hide $ e
-        _ -> Nothing
-  | otherwise = Nothing
 parse _ = Nothing
 
 run :: Command -> GameEnv ()

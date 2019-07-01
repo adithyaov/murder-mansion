@@ -1,10 +1,12 @@
-module Game where
+module Game 
+  ( module Game
+  , module Asset
+  ) where
 
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Element
-import Location
+import Asset
 
 data Game = Game
   { player :: House

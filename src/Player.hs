@@ -1,8 +1,6 @@
 module Player where
 
-import Element
 import Game
-import Location
 import Command
 import Control.Monad.Trans.RWS.Strict
 

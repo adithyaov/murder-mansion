@@ -4,9 +4,7 @@ import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Element
 import Game
-import Location
 
 data Command
   = PickUp Element
@@ -14,8 +12,8 @@ data Command
 
 parse :: [String] -> Maybe Command
 parse (x:y:xs)
-  | x ++ y == "pickup" = fmap PickUp $ toElement . unwords $ xs
-  | x == "drop" = fmap Drop $ toElement . unwords $ (y : xs)
+  | x ++ y == "pickup" = fmap PickUp $ toAsset . unwords $ xs
+  | x == "drop" = fmap Drop $ toAsset . unwords $ (y : xs)
   | otherwise = Nothing
 parse _ = Nothing
 
