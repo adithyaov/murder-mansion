@@ -9,7 +9,7 @@ playerTurn s = do
   c <- getLine
   case parse (words c) of
     Nothing -> do
-      putStrLn $ c ++ " is not a valid command"
+      putStrLn . info $ ParseError
       return s
     Just x -> do
       (sN, w) <- execRWST (run x) () s

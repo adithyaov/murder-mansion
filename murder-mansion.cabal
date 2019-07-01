@@ -31,6 +31,7 @@ executable murder-mansion
                      , Asset.Location
                      , Asset.Message
                      , Asset
+                     , Map
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
                      , containers
