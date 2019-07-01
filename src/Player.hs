@@ -1,8 +1,8 @@
 module Player where
 
-import Game
 import Command
 import Control.Monad.Trans.RWS.Strict
+import Game
 
 playerTurn :: Game -> IO Game
 playerTurn s = do
@@ -15,10 +15,9 @@ playerTurn s = do
       (sN, w) <- execRWST (run x) () s
       putStrLn w
       return sN
-      
+
 loopPlayerTurn :: Game -> IO Game
 loopPlayerTurn s = do
   sN <- playerTurn s
   print sN
   loopPlayerTurn sN
-  

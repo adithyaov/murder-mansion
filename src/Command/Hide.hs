@@ -6,6 +6,12 @@ import Game
 
 data Command = Hide Element | Unhide
 
+instance ResponseMessage Command where
+  success (Hide e) = "successfully hidden. nobody can see you now."
+  success Unhide = "successfully unhidden. people can see you now."
+  failuer (Hide e) = "can't hide here."
+  failuer Unhide = "can't unhide."
+
 parse :: [String] -> Maybe Command
 parse ["unhide"] = Just Unhide
 parse ("hide":y:xs) = do
@@ -17,16 +23,11 @@ parse ("hide":y:xs) = do
 parse _ = Nothing
 
 run :: Command -> GameEnv ()
-run (Hide (Table _)) = do
+run c = do
   g <- get
   put $ g { visibility = False }
-  tellN "Hid under the table. Nobody can see you now."
-run (Hide (Cabinet _)) = do
-  g <- get
-  put $ g { visibility = False }
-  tellN "Hid inside the cabinet. Nobody can see you now."
-run Unhide = do
+  tell . success $ c
+run c@Unhide = do
   g <- get
   put $ g { visibility = True }
-  tellN "Not hiding anymore! Need to escape fast!"
-run _ = tell "Nope, Can't hide there."
+  tell . success $ c

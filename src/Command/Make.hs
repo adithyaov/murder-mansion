@@ -8,12 +8,16 @@ import Game
 
 newtype Command = Make Element
 
+instance ResponseMessage Command where
+  success (Make e) = "successfully made " ++ fromAsset e ++ "\n" ++ info e
+  failuer (Make e) = "couldn't make " ++ fromAsset e
+
 parse :: [String] -> Maybe Command
 parse ("make":xs) = fmap Make $ toAsset . unwords $ xs
 parse _ = Nothing
 
 run :: Command -> GameEnv ()
-run (Make ExitKey) = do
+run c@(Make ExitKey) = do
   g@(Game _ _ _ eM _) <- get
   let moldAndSteelAvailable = isAvailable Steel g && isAvailable Mold g
       furnaceAvailable = isAvailable Furnace g
@@ -25,13 +29,10 @@ run (Make ExitKey) = do
           . Map.insert ExitKey Bag
           $ eM
   when haveEverything $ do
-    tellN
-      "Finally, Made the exit key. I need to get out of this place ASAP!"
     put $ g { elementMap = nEM }
-  unless haveEverything $
-    tellN
-      "Can't make the lock, few ingriedients are missing."
-run (Make Mold) = do
+    tell . success $ c
+  unless haveEverything $ tell . failuer $ c
+run c@(Make Mold) = do
   g@(Game _ _ _ eM _) <- get
   let clayAvailable = isAvailable Clay g
       gasZAvailable = isAvailable GasZ g
@@ -42,10 +43,7 @@ run (Make Mold) = do
           . Map.insert GasZ None
           $ eM
   when haveEverything $ do
-    tellN
-      "Made the mold. A step closer to freedom."
     put $ g { elementMap = nEM }
-  unless haveEverything $
-    tellN
-      "Can't make mold, few ingriedients are missing."
-run _ = tell "Nope, Can't make that in this life."
+    tell . success $ c
+  unless haveEverything $ tell . failuer $ c
+run c = tell . failuer $ c

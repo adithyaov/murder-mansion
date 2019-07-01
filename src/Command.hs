@@ -1,9 +1,9 @@
 module Command where
 
 import qualified Command.Bag as Bag
-import qualified Command.Movement as Movement
 import qualified Command.Hide as Hide
 import qualified Command.Make as Make
+import qualified Command.Movement as Movement
 import qualified Command.Switch as Switch
 import Game
 
@@ -19,11 +19,12 @@ lM Nothing x = x
 lM x Nothing = x
 
 parse :: [String] -> Maybe Command
-parse x = lM (CB <$> Bag.parse x)
-        . lM (CMo <$> Movement.parse x)
-        . lM (CH <$> Hide.parse x)
-        . lM (CMa <$> Make.parse x)
-        . lM (CS <$> Switch.parse x) $ Nothing
+parse x =
+  lM (CB <$> Bag.parse x) .
+  lM (CMo <$> Movement.parse x) .
+  lM (CH <$> Hide.parse x) .
+  lM (CMa <$> Make.parse x) . lM (CS <$> Switch.parse x) $
+  Nothing
 
 run :: Command -> GameEnv ()
 run (CMo x) = Movement.run x

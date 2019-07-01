@@ -15,6 +15,10 @@ data Command
   | Up
   | Down
 
+instance ResponseMessage Command where
+  success _ = "successfully moved."
+  failuer _ = "failed to move, there is no path here."
+
 parse :: [String] -> Maybe Command
 parse ["go", x]
   | x == "north" = Just North
@@ -75,18 +79,19 @@ run c = do
       visibilityCheck = v
       successRun nL = do
         put $ Game nL v m eM e
-        tellN $ "you're currently in the " ++ show nL
-        tellN . info $ nL
+        tell . success $ c
+        tell $ "you're currently in " ++ fromAsset nL
+        tell . info $ nL
       runStorageRoom nL = do
         when storageCheck $ successRun nL
-        unless storageCheck $ tellN "oops, You don't have the storage key."
+        unless storageCheck $ tell . info . InGameError $ UnavailableAssetsError
   unless visibilityCheck $
-    tellN "can't move when hidden, Leave the hiding place first."
+    tell . info . InGameError $ HiddenError 
   case (p, moveL c p) of
-    (_, Nothing) -> tellN "moving out of bounds. can't move here."
+    (_, Nothing) -> tell . failuer $ c
     (StorageRoom, Just nL) -> runStorageRoom nL
     (_, Just StorageRoom) -> runStorageRoom StorageRoom
     (_, Just Exit) -> do
       when exitCheck $ successRun Exit
-      unless exitCheck $ tellN "oops, you don't have the exit key."
+      unless exitCheck $ tell . info . InGameError $ UnavailableAssetsError
     (_, Just nL) -> successRun nL

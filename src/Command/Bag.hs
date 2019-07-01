@@ -10,6 +10,12 @@ data Command
   = PickUp Element
   | Drop Element
 
+instance ResponseMessage Command where
+  success (PickUp e) = "picked up " ++ fromAsset e ++ "\n" ++ info e
+  success (Drop e) = "dropped " ++ fromAsset e
+  failuer (PickUp e) = "unable to pick up " ++ fromAsset e
+  failuer (Drop e) = "unable to drop " ++ fromAsset e
+
 parse :: [String] -> Maybe Command
 parse (x:y:xs)
   | x ++ y == "pickup" = fmap PickUp $ toAsset . unwords $ xs
@@ -18,23 +24,21 @@ parse (x:y:xs)
 parse _ = Nothing
 
 run :: Command -> GameEnv ()
-run (PickUp x) = do
+run c@(PickUp x) = do
   g@(Game p _ _ eM _) <- get
   let inLocationAndPickable = eM ! x == H p && isPickable x
   when inLocationAndPickable $ do
-    tellN
-      "Picked up the item. You can now use this to make new items or unlock new paths."
     put $ pickItem x g
+    tell . success $ c
   unless inLocationAndPickable $
-    tellN
-      "Unable to pick up the item. It either not pickable or is not in the room."
-run (Drop x) = do
+    tell . failuer $ c
+run c@(Drop x) = do
   g@(Game _ _ _ eM _) <- get
   let inBag = eM ! x == Bag
   when inBag $ do
-    tellN "Dropped the item. You can pick it from here if you ever need it."
     put $ dropItem x g
-    unless inBag $ tell "Ah! You cannot drop something that you do not have"
+    tell . success $ c
+    unless inBag $ tell . failuer $ c
 
 pickItem x (Game p v m eM e) = Game p v m eM' e
   where

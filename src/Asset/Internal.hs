@@ -10,5 +10,8 @@ class HasStringID a where
 class IsPickable a where
   isPickable :: a -> Bool
 
+class ResponseMessage a where
+  success :: a -> String
+  failuer :: a -> String
 
 

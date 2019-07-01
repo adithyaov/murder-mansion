@@ -1,12 +1,12 @@
-module Game 
+module Game
   ( module Game
   , module Asset
   ) where
 
+import Asset
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Asset
 
 data Game = Game
   { player :: House
@@ -57,7 +57,6 @@ initialGame =
     initialElectricity
 
 isAvailable :: Element -> Game -> Bool
-isAvailable x (Game p _ _ eM _) =
-  (eM ! x == H p) || (eM ! x == Bag) 
+isAvailable x (Game p _ _ eM _) = (eM ! x == H p) || (eM ! x == Bag)
 
 tellN w = tell "\n" >> tell w

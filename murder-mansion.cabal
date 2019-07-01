@@ -29,6 +29,7 @@ executable murder-mansion
                      , Asset.Element
                      , Asset.Internal
                      , Asset.Location
+                     , Asset.Message
                      , Asset
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
