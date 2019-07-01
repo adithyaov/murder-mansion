@@ -42,6 +42,11 @@ runComp g c = do
   putStrLn w
   return (a, s)
 
+runWhenContinue :: GameEnv () -> GameEnv ()
+runWhenContinue c = do
+  g <- gameEnd
+  when (g == Continue) c
+
 game :: IO ()
 game = do
   _ <- runComp initialGame gameSetup
@@ -49,15 +54,11 @@ game = do
 
 gameLoop :: Game -> IO ()
 gameLoop s0 = do
-  (_, s1) <- runComp s0 playerTurn 
-  (g1, _) <- runComp s1 gameEnd
-  when (g1 == Continue) $ do
-    (_, s2) <- runComp s1 playerTurn 
-    (g2, _) <- runComp s2 gameEnd
-    when (g2 == Continue) $ do
-      (_, s3) <- runComp s2 murdererTurn
-      (g3, _) <- runComp s2 gameEnd
-      when (g3 == Continue) $ gameLoop s3
+  (_, s1) <- runComp s0 . runWhenContinue $ playerTurn 
+  (_, s2) <- runComp s1 . runWhenContinue $ playerTurn 
+  (_, s3) <- runComp s2 . runWhenContinue $ murdererTurn
+  (g, _) <- runComp s3 gameEnd
+  when (g == Continue) $ gameLoop s3
 
 
 
