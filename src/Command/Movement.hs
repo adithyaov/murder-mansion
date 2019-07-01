@@ -1,10 +1,11 @@
 module Command.Movement where
 
-import Control.Monad (unless, when)
+import Control.Monad (unless, when, sequence_)
 import Control.Monad.Trans.RWS.Strict
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 import Data.Map ((!))
+import Data.Map as Map
 import Game
 import Map (positions)
 
@@ -19,6 +20,15 @@ data Command
 instance ResponseMessage Command where
   success _ = "successfully moved."
   failuer _ = "failed to move, there is no path here."
+
+describe :: House -> GameEnv ()
+describe r = do
+  (Game _ _ _ eM _) <- get
+  let elmFind k y a
+        | y == H r = k:a 
+        | otherwise = a
+      desc x = fromAsset x ++ ": " ++ info x
+  sequence_ $ tell . desc <$> Map.foldrWithKey elmFind [] eM
 
 parse :: [String] -> Maybe Command
 parse ["go", x]
@@ -53,6 +63,8 @@ run c = do
         put $ Game nL v m eM e
         tell . success $ c
         tell $ "you're currently in " ++ fromAsset nL
+        tell "the following are the items in the room."
+        describe nL
         tell . info $ nL
       runStorageRoom nL = do
         when storageCheck $ successRun nL
