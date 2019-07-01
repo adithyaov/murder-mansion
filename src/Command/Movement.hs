@@ -7,7 +7,7 @@ import qualified Data.Bimap as Bimap
 import Data.Map ((!))
 import Data.Map as Map
 import Game.Internal
-import Map (positions)
+import Game.Map (positions)
 
 data Command
   = North
@@ -55,14 +55,14 @@ run c = do
         mytell . success $ c
         mytell $ "you're currently in " ++ fromAsset nL
         mytell . info $ nL
-        mytell "the following are the items in the room."
+        mytell "the following are the items in the room:"
         describe nL
       runStorageRoom nL = do
         when storageCheck $ successRun nL
         unless storageCheck $ mytell . info . InGameError $ UnavailableAssetsError
   unless visibilityCheck $
     mytell . info . InGameError $ HiddenError
-  case (p, moveL c p) of
+  when visibilityCheck $ case (p, moveL c p) of
     (_, Nothing) -> mytell . failuer $ c
     (StorageRoom, Just nL) -> runStorageRoom nL
     (_, Just StorageRoom) -> runStorageRoom StorageRoom

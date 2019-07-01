@@ -1,22 +1,16 @@
 module Player where
 
+import System.IO
 import Command
 import Control.Monad.Trans.RWS.Strict
 import Game.Internal
+import Control.Monad.IO.Class (liftIO)
 
-playerTurn :: Game -> IO Game
-playerTurn s = do
-  c <- getLine
+playerTurn :: GameEnv ()
+playerTurn = do
+  liftIO . putStr $ commandPrepend
+  c <- liftIO $ hFlush stdout >> getLine
   case parse (words c) of
-    Nothing -> do
-      putStrLn . info $ ParseError
-      return s
-    Just x -> do
-      (sN, w) <- execRWST (run x) () s
-      putStrLn w
-      return sN
+    Nothing -> mytell . info $ ParseError
+    Just x -> run x
 
-loopPlayerTurn :: Game -> IO Game
-loopPlayerTurn s = do
-  sN <- playerTurn s
-  loopPlayerTurn sN

@@ -23,7 +23,7 @@ parse ("hide":y:xs) = do
 parse _ = Nothing
 
 run :: Command -> GameEnv ()
-run c = do
+run c@(Hide _) = do
   g <- get
   put $ g { visibility = False }
   mytell . success $ c

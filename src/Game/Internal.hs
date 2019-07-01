@@ -69,3 +69,5 @@ describe r = do
   sequence_ $ mytell . desc <$> Map.foldrWithKey elmFind [] eM
 
 mytell w = tell w >> tell "\n" 
+
+commandPrepend = ">> "

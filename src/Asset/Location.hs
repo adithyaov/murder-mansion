@@ -103,7 +103,7 @@ instance HasInfo House where
   info Pool = "the pool.....dead bodies everywhere..."
   info TreeHouseGroundFloor = "the ground floor of the tree house looks clean. wait, that's a ladder."
   info TreeHouseFirstFloor = "the tree house first floor. lets see what we find here."
-  info FireRoom = "the fire room has a furnace. one should probably inspect the furnace."
+  info FireRoom = "this is a fire room. very hot in here."
   info Garage = "the garage seems rather empty for such a huge house. where are all the cars???"
   info HallWayFirstFloor = "the hallway of the first floor. i need to explore this house asap."
   info MasterBedroom = "the master bedroom is huge!"

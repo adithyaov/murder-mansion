@@ -1,4 +1,4 @@
-module Map where
+module Game.Map where
 
 import Asset
 import Data.Bimap (Bimap)
