@@ -6,7 +6,7 @@ import Game.Internal
 import Asset
 import Player
 import Murderer
-import Control.Monad (when)
+import Control.Monad (when, unless)
 
 data GameStatus = Escaped | Dead | Continue deriving (Eq)
 
@@ -28,12 +28,8 @@ gameEnd = do
   endF p m
   where
     endF x y
-      | x == y = do
-          mytell . info $ Dead
-          return Dead
-      | x == Exit = do
-          mytell . info $ Escaped
-          return Escaped
+      | x == y = return Dead
+      | x == Exit = return Escaped
       | otherwise = return Continue
 
 runComp :: Game -> GameEnv a -> IO (a, Game)
@@ -59,6 +55,7 @@ gameLoop s0 = do
   (_, s3) <- runComp s2 . runWhenContinue $ murdererTurn
   (g, _) <- runComp s3 gameEnd
   when (g == Continue) $ gameLoop s3
+  unless (g == Continue) $ putStrLn . info $ g
 
 
 
