@@ -1,8 +1,10 @@
-# Murder Mansion
+Title         : Murder Mansion
 
-## Game Idea
+[TITLE]
 
-### Description
+# Game Idea
+
+## Description
 
 Get out of the house whilst avoiding the murderer. The only way
 leave the house is through the main exit. The main exit 
@@ -11,7 +13,7 @@ with the murderer. Hence you need to make your own main key by
 finding combination of elements to make the main key. Explore
 the house, gather items to solve problems and escape the murderer.
 
-### Game elements
+## Game elements
 
 - You have a bag with you in which you can carry items that you find in the house.
 - You can make the main key if you have mold and Steel in your bag and a furnace is in the vicinity.
@@ -22,15 +24,15 @@ the house, gather items to solve problems and escape the murderer.
 - Steel can be found the storage room.
 - The storage room needs a storage key to enter.
 
-### The Map
+## The Map
 
 - The map consists of multiple rooms with different purposes.
 - Different rooms have different elements hidden.
 - The player has to explore all the rooms, find/make items and escape the house.
 
-## Implementation Details
+# Implementation Details
 
-### Modules
+## Modules
 
 The game consists of 17 modules in total.
 
@@ -52,56 +54,56 @@ The game consists of 17 modules in total.
 16. Player
 17. Murderer
 
-### Module description
+## Module description
 
-#### Main
+### Main
 
 This is the main execution point of the program.
 
-#### Game
+### Game
 
 This module contains the main game loop for execution.
 This module is responsible for setting up the game and executing it.
 This the top level module.
 
-#### Game.Internal
+### Game.Internal
 
 This is the internal game module that states how a game looks
 and has the initial state of the game.
 
-#### Game.Map
+### Game.Map
 
 This module contains the default map of the game,
 that is, locations mapped to coordinates.
 
-#### Asset
+### Asset
 
 This module re-exports every module in Asset.\* 
 
-#### Asset.Internal
+### Asset.Internal
 
 This module defines a few classes that are required for any asset.
 The classes defined are HasInfo, HasStringID, IsPickable, and ResponseMessage.
 
-#### Asset.Element
+### Asset.Element
 
 This module contains the elements in the game. Things like 'generator',
 'blue table' etc are defined in this module.
 
-#### Asset.Location
+### Asset.Location
 
 This module contains valid locations in the game. Things like 'living room' and 'pool' are defined in this module.
 
-#### Asset.Message
+### Asset.Message
 
 This module contains types abstracting any kind of information.
 Errors and a few game instruction are defined here.
 
-#### Command
+### Command
 
 This module is exports the main parser and all game command data types.
 
-#### Command.Bag
+### Command.Bag
 
 This module contains commands + parser that interacts with a bag.
 
@@ -110,7 +112,7 @@ Examples,
 - parse "pick up x" = PickUp \<$\> toAsset x
 - parse "drop x" = Drop \<$\> toAsset x
 
-#### Command.Hide
+### Command.Hide
 
 This module contains commands + parser that hide/show the player.
 
@@ -119,7 +121,7 @@ Examples,
 - parse "hide under x" = Hide \<$\> toAsset x
 - parse "unhide" = Just Unhide
 
-#### Command.Make
+### Command.Make
 
 This module contains commands + parser to make a certain item is possible.
 
@@ -127,7 +129,7 @@ Examples,
 
 - parse "make x" = Make \<$\> toAsset x
 
-#### Command.Movement
+### Command.Movement
 
 This module contains commands + parser for navigation. 
 
@@ -137,7 +139,7 @@ Examples,
 - parse "go east" = Just East
 - parse "go up" = Just Up
 
-#### Command.Switch
+### Command.Switch
 
 This module contains commands + parser for turning on/off things. 
 
@@ -145,22 +147,27 @@ Examples,
 
 - parse "turn on x" = TurnOn \<$\> toAsset x
 
-#### Player
+### Player
 
 This module contains the actions that should occur during the player's turn.
 
-#### Murderer
+### Murderer
 
 This module exports a simple AI murderer who randomly moves.
 
-### Screenshots
+## Screenshots
 
-![loading...][screenshots/game-run-sample.PNG]
+![game-run-sample]
 
-![loading...][screenshots/game-run-sample-2.PNG]
+![game-run-sample-3]
 
-![loading...][screenshots/game-run-sample-3.PNG]
+![game-run-sample-2]
 
+[game-run-sample]: images/game-run-sample.PNG "game-run-sample" { width:auto; max-width:90% }
+
+[game-run-sample-3]: images/game-run-sample-3.PNG "game-run-sample-3" { width:auto; max-width:90% }
+
+[game-run-sample-2]: images/game-run-sample-2.PNG "game-run-sample-2" { width:auto; max-width:90% }
 
 
 
