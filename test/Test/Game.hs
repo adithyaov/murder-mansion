@@ -1,4 +1,3 @@
--- This the main game module.
 module Game where
 
 import Command
@@ -9,7 +8,6 @@ import Player
 import Murderer
 import Control.Monad (when, unless)
 
--- A default game status that affects the workflow.
 data GameStatus = Escaped | Dead | Continue deriving (Eq)
 
 instance HasInfo GameStatus where
@@ -17,7 +15,6 @@ instance HasInfo GameStatus where
   info Dead = "game over. you are dead."
   info Continue = "continue..."
 
--- The initial game setup. Things you do before the game starts.
 gameSetup :: GameEnv ()
 gameSetup = do
   (Game p _ _ _ _) <- get
@@ -25,9 +22,8 @@ gameSetup = do
   mytell $ "you're currently in " ++ fromAsset p 
   mytell . info $ p
 
--- This functions gives game status.
-gameStatus :: GameEnv GameStatus
-gameStatus = do
+gameEnd :: GameEnv GameStatus
+gameEnd = do
   (Game p _ m _ _) <- get
   endF p m
   where
@@ -36,32 +32,28 @@ gameStatus = do
       | x == Exit = return Escaped
       | otherwise = return Continue
 
--- A helper to run a specific computation.
 runComp :: Game -> GameEnv a -> IO (a, Game)
 runComp g c = do
   (a, s, w) <- runRWST c () g
   putStrLn w
   return (a, s)
 
--- A helper to run case computations.
 runWhenContinue :: GameEnv () -> GameEnv ()
 runWhenContinue c = do
-  g <- gameStatus
+  g <- gameEnd
   when (g == Continue) c
 
--- The main game contating the game loop.
 game :: IO ()
 game = do
   _ <- runComp initialGame gameSetup
   gameLoop initialGame
 
--- The game loop.
 gameLoop :: Game -> IO ()
 gameLoop s0 = do
   (_, s1) <- runComp s0 . runWhenContinue $ playerTurn 
   (_, s2) <- runComp s1 . runWhenContinue $ playerTurn 
   (_, s3) <- runComp s2 . runWhenContinue $ murdererTurn
-  (g, _) <- runComp s3 gameStatus
+  (g, _) <- runComp s3 gameEnd
   when (g == Continue) $ gameLoop s3
   unless (g == Continue) $ putStrLn . info $ g
 

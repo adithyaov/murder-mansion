@@ -1,4 +1,3 @@
--- This module defines the movement of a character.
 module Command.Movement where
 
 import Control.Monad (unless, when, sequence_)
@@ -10,7 +9,6 @@ import Data.Map as Map
 import Game.Internal
 import Game.Map (positions)
 
--- Basic directions the player can move.
 data Command
   = North
   | South
@@ -23,7 +21,6 @@ instance ResponseMessage Command where
   success _ = "successfully moved."
   failuer _ = "failed to move, there is no path here."
 
--- A simple parser.
 parse :: [String] -> Maybe Command
 parse ["go", x]
   | x == "north" = Just North
@@ -35,7 +32,6 @@ parse ["go", x]
   | otherwise = Nothing
 parse _ = Nothing
 
--- This function takes a command and a location to give out a new location.
 moveC :: Command -> (Int, Int, Int) -> (Int, Int, Int)
 moveC North (x, y, z) = (x, y + 1, z)
 moveC South (x, y, z) = (x, y - 1, z)
@@ -44,12 +40,10 @@ moveC West (x, y, z) = (x - 1, y, z)
 moveC Up (x, y, z) = (x, y, z + 1)
 moveC Down (x, y, z) = (x, y, z - 1)
 
--- This function uses the 'positions' defined in 'Game.Map' to provide a valid new location.
-moveL :: GameMap -> House -> Command -> Maybe House
-moveL m x c =
-  Bimap.lookupR x m >>= Just . moveC c >>= flip Bimap.lookup m
+moveL :: Command -> House -> Maybe House
+moveL c x =
+  Bimap.lookupR x positions >>= Just . moveC c >>= flip Bimap.lookup positions
 
--- A runner that makes the valid movements and updates the state.
 run :: Command -> GameEnv ()
 run c = do
   (Game p v m eM e) <- get
@@ -68,7 +62,7 @@ run c = do
         unless storageCheck $ mytell . info . InGameError $ UnavailableAssetsError
   unless visibilityCheck $
     mytell . info . InGameError $ HiddenError
-  when visibilityCheck $ case (p, moveL positions p c) of
+  when visibilityCheck $ case (p, moveL c p) of
     (_, Nothing) -> mytell . failuer $ c
     (StorageRoom, Just nL) -> runStorageRoom nL
     (_, Just StorageRoom) -> runStorageRoom StorageRoom

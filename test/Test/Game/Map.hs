@@ -1,11 +1,9 @@
--- This module defines the Map of the house.
 module Game.Map where
 
 import Asset
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 
--- This is a mapping between virtual and physical world.
 positions :: Bimap (Int, Int, Int) House
 positions =
   Bimap.fromList

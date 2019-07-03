@@ -1,4 +1,3 @@
--- The main module
 module Main where
 
 main :: IO ()

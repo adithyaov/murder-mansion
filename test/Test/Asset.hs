@@ -1,4 +1,3 @@
--- This module re-exports all the Asset.* modules.
 module Asset
   ( module Asset.Element
   , module Asset.Location

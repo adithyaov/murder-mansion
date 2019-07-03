@@ -1,4 +1,3 @@
--- This module describes the info about basic messages/errors in the game.
 module Asset.Message where
 
 import Asset.Internal

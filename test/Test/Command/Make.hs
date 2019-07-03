@@ -1,4 +1,3 @@
--- This module contains commands to make new items.
 module Command.Make where
 
 import Control.Monad (unless, when)
@@ -7,19 +6,16 @@ import Data.Map (Map, (!))
 import qualified Data.Map as Map
 import Game.Internal
 
--- Basic command data type.
 newtype Command = Make Element
 
 instance ResponseMessage Command where
   success (Make e) = "successfully made " ++ fromAsset e ++ "\n" ++ info e
   failuer (Make e) = "couldn't make " ++ fromAsset e
 
--- Simple parser.
 parse :: [String] -> Maybe Command
 parse ("make":xs) = fmap Make $ toAsset . unwords $ xs
 parse _ = Nothing
 
--- A runner that checks if the conditions ate met for making and then makes the described item.
 run :: Command -> GameEnv ()
 run c@(Make ExitKey) = do
   g@(Game _ _ _ eM _) <- get

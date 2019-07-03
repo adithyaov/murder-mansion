@@ -1,11 +1,9 @@
--- This module defines commands for hiding/unhiding.
 module Command.Hide where
 
 import Control.Monad (unless, when)
 import Control.Monad.Trans.RWS.Strict
 import Game.Internal
 
--- Basic command data type.
 data Command = Hide Element | Unhide
 
 instance ResponseMessage Command where
@@ -14,7 +12,6 @@ instance ResponseMessage Command where
   failuer (Hide e) = "can't hide here."
   failuer Unhide = "can't unhide."
 
--- Parser that parses and outputs the command.
 parse :: [String] -> Maybe Command
 parse ["unhide"] = Just Unhide
 parse ("hide":y:xs) = do
@@ -25,7 +22,6 @@ parse ("hide":y:xs) = do
     _ -> Nothing
 parse _ = Nothing
 
--- The runner to execute the functionality.
 run :: Command -> GameEnv ()
 run c@(Hide _) = do
   g <- get

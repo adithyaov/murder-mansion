@@ -1,4 +1,3 @@
--- This is the internal game module
 module Game.Internal
   ( module Game.Internal
   , module Asset
@@ -8,9 +7,7 @@ import Asset
 import Control.Monad.Trans.RWS.Strict
 import Data.Map (Map, (!))
 import qualified Data.Map as Map
-import Data.Bimap (Bimap)
 
--- This is the game state.
 data Game = Game
   { player :: House
   , visibility :: Bool
@@ -19,11 +16,7 @@ data Game = Game
   , electricity :: Bool
   } deriving (Show)
 
--- The environment of the game state is a standard RWS monad over IO.
 type GameEnv = RWST () String Game IO
-
--- The type of a map in the game
-type GameMap = Bimap (Int, Int, Int) House
 
 initialPlayerLocation = LivingArea
 
@@ -33,7 +26,6 @@ initialVisibility = True
 
 initialElectricity = False
 
--- The initial location of all the elements.
 initialElementLocation =
   Map.fromList
     [ (ExitKey, None)
@@ -64,11 +56,9 @@ initialGame =
     initialElementLocation
     initialElectricity
 
--- A simple functions to check of resources are available in the vicinity.
 isAvailable :: Element -> Game -> Bool
 isAvailable x (Game p _ _ eM _) = (eM ! x == H p) || (eM ! x == Bag)
 
--- This function describes all the elements in the house.
 describe :: House -> GameEnv ()
 describe r = do
   (Game _ _ _ eM _) <- get
@@ -78,7 +68,6 @@ describe r = do
       desc x = fromAsset x ++ ": " ++ info x
   sequence_ $ mytell . desc <$> Map.foldrWithKey elmFind [] eM
 
--- A simple helper function over tell.
 mytell w = tell w >> tell "\n" 
 
 commandPrepend = ">> "

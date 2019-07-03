@@ -1,16 +1,13 @@
--- This module contains the elements required for the game.
 module Asset.Element where
 
 import Asset.Internal
 
--- Color for more options on the items.
 data Color
   = Red
   | Blue
   | Green
   deriving (Ord, Eq, Show)
 
--- The elements in the game.
 data Element
   = StorageKey
   | ExitKey

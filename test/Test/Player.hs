@@ -1,4 +1,3 @@
--- This module defines the workflow of a player.
 module Player where
 
 import System.IO
@@ -7,8 +6,6 @@ import Control.Monad.Trans.RWS.Strict
 import Game.Internal
 import Control.Monad.IO.Class (liftIO)
 
--- Describes what a player can do in their turn.
--- Parse input and change the game state accordingly.
 playerTurn :: GameEnv ()
 playerTurn = do
   liftIO . putStr $ commandPrepend

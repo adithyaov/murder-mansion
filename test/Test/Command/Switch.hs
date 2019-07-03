@@ -1,13 +1,10 @@
--- This module defines the working of a switch in the game. Boolean operations.
 module Command.Switch where
 
 import Control.Monad.Trans.RWS.Strict
 import Game.Internal
 
--- Basic data type for command.
 data Command = TurnOn Element | TurnOff Element
 
--- A simple parser.
 parse :: [String] -> Maybe Command
 parse ("turn":y:xs) = do
   e <- toAsset . unwords $ xs
@@ -17,7 +14,6 @@ parse ("turn":y:xs) = do
     _ -> Nothing
 parse _ = Nothing
 
--- The runner which current only supports the switch for the generator.
 run :: Command -> GameEnv ()
 run (TurnOn Generator) = do
   g <- get

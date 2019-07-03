@@ -1,9 +1,7 @@
--- This module contains all the locations in the game (physical/virtual)
 module Asset.Location where
 
 import Asset.Internal
 
--- The main location data type.
 data Location
   = H House
   | Bag
@@ -38,7 +36,7 @@ data House
   | Exit
   deriving (Eq, Ord, Show)
 
--- Implementing basic instances.
+
 instance HasStringID House where
   fromAsset LivingArea = "living area"
   fromAsset Pool = "pool"

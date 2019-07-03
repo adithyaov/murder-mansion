@@ -1,4 +1,3 @@
--- This module has helper classes for standerdizing assets.
 module Asset.Internal where
 
 class HasInfo a where
