@@ -6,15 +6,16 @@ import Data.Map (Map, (!))
 import qualified Data.Map as Map
 import Game.Internal
 
-newtype Command = Make Element
-
-instance ResponseMessage Command where
-  success (Make e) = "successfully made " ++ fromAsset e ++ "\n" ++ info e
-  failuer (Make e) = "couldn't make " ++ fromAsset e
+test = do
+  s <- mkState initialGame
+  cmd $ "make exit key"
 
 parse :: [String] -> Maybe Command
 parse ("make":xs) = fmap Make $ toAsset . unwords $ xs
 parse _ = Nothing
+
+make :: Recipe -> Command -> GameEnv ()
+make 
 
 run :: Command -> GameEnv ()
 run c@(Make ExitKey) = do

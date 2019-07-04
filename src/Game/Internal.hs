@@ -25,6 +25,9 @@ type GameEnv = RWST () String Game IO
 -- The type of a map in the game
 type GameMap = Bimap (Int, Int, Int) House
 
+-- The type of a map in the game
+type RecipeMap = Map Element [Either Element Element]
+
 initialPlayerLocation = LivingArea
 
 initialMurdererLocation = ChemistryLab
@@ -32,6 +35,12 @@ initialMurdererLocation = ChemistryLab
 initialVisibility = True
 
 initialElectricity = False
+
+-- Recipies of elements
+recipies =
+  Map.fromList
+    [ (ExitKey, [Left Mold, Left Steel, Right Furnace, Left Oil, Left Lighter])
+    , (Mold, [Right ChemicalChamber, Left GasZ, Left Clay]) ]
 
 -- The initial location of all the elements.
 initialElementLocation =
@@ -80,5 +89,13 @@ describe r = do
 
 -- A simple helper function over tell.
 mytell w = tell w >> tell "\n" 
+
+-- A simple function to only get Left elements
+leftElements :: [Either a b] -> [a]
+leftElements xs = [ x | Left x <- xs ]
+
+-- A simple function to get all elements
+allElements :: [Either a a] -> [a]
+allElements xs = [ x | Left x <- xs ] ++ [ x | Right x <- xs ]
 
 commandPrepend = ">> "

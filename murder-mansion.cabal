@@ -42,3 +42,28 @@ executable murder-mansion
                      , random
   hs-source-dirs:      src
   default-language:    Haskell2010
+
+-- test-suite murder-mansion
+--   main-is:             Main.hs
+--   type:                exitcode-stdio-1.0
+--   other-modules:       Test.Command
+--                      , Test.Game.Internal
+--                      , Test.Command.Bag
+--                      , Test.Command.Movement
+--                      , Test.Command.Make
+--                      , Test.Command.Hide
+--                      , Test.Command.Switch
+--                      , Test.Player
+--                      , Test.Game.Map
+--                      , Test.Game
+--                      , Test.Murderer
+--                      , Test
+--   -- other-extensions:
+--   build-depends:       base ^>=4.10.1.0
+--                      , containers
+--                      , bimap
+--                      , transformers
+--                      , random
+--                      , murder-mansion
+--   hs-source-dirs:      test
+--   default-language:    Haskell2010

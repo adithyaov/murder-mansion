@@ -19,35 +19,23 @@ parse :: [String] -> Maybe Command
 parse ("make":xs) = fmap Make $ toAsset . unwords $ xs
 parse _ = Nothing
 
--- A runner that checks if the conditions ate met for making and then makes the described item.
+-- A function that checks if the conditions ate met for making and then makes the described item.
+make :: RecipeMap -> Command -> GameEnv ()
+make r c@(Make e) =
+  case Map.lookup e r of
+    Nothing -> mytell . failuer $ c
+    Just xs -> do
+      g <- get
+      let haveEverything = foldr ((&&) . flip isAvailable g) True . allElements $ xs
+      when haveEverything $ do
+        let setNoneF = foldr ((.) . \k -> Map.insert k None) id . leftElements $ xs
+            nEM = Map.insert e Bag . setNoneF . elementMap $ g
+        put $ g { elementMap = nEM }
+        mytell . success $ c
+      unless haveEverything $ do
+        mytell . failuer $ c
+        mytell . info $ UnavailableAssetsError
+
+-- A simple runner
 run :: Command -> GameEnv ()
-run c@(Make ExitKey) = do
-  g@(Game _ _ _ eM _) <- get
-  let moldAndSteelAvailable = isAvailable Steel g && isAvailable Mold g
-      furnaceAvailable = isAvailable Furnace g
-      oilAndLighterAvailable = isAvailable Oil g && isAvailable Lighter g
-      haveEverything = moldAndSteelAvailable && furnaceAvailable && oilAndLighterAvailable
-      nEM = Map.insert Mold None
-          . Map.insert Steel None
-          . Map.insert Oil None
-          . Map.insert ExitKey Bag
-          $ eM
-  when haveEverything $ do
-    put $ g { elementMap = nEM }
-    mytell . success $ c
-  unless haveEverything $ mytell . failuer $ c
-run c@(Make Mold) = do
-  g@(Game _ _ _ eM _) <- get
-  let clayAvailable = isAvailable Clay g
-      gasZAvailable = isAvailable GasZ g
-      chemChamberAvailable = isAvailable ChemicalChamber g
-      haveEverything = clayAvailable && gasZAvailable && chemChamberAvailable
-      nEM = Map.insert Mold Bag
-          . Map.insert Clay None
-          . Map.insert GasZ None
-          $ eM
-  when haveEverything $ do
-    put $ g { elementMap = nEM }
-    mytell . success $ c
-  unless haveEverything $ mytell . failuer $ c
-run c = mytell . failuer $ c
+run = make recipies

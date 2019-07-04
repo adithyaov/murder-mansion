@@ -15,6 +15,7 @@ data Command
   | CH Hide.Command
   | CMa Make.Command
   | CS Switch.Command
+  | NOP
 
 lM :: Maybe a -> Maybe a -> Maybe a
 lM Nothing x = x
@@ -37,3 +38,4 @@ run (CB x) = Bag.run x
 run (CH x) = Hide.run x
 run (CMa x) = Make.run x
 run (CS x) = Switch.run x
+run NOP = return ()
