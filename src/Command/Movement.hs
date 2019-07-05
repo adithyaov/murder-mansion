@@ -66,7 +66,9 @@ enter gM eRM c = do
     (True, x, Just y, Just zs) -> do
       let haveEverything = foldr ((&&) . flip isAvailable g) True zs
       when haveEverything $ successRun y
-      unless haveEverything $ mytell . info $ UnavailableAssetsError
+      unless haveEverything $ do
+        mytell . failuer $ c
+        mytell . info $ UnavailableAssetsError
     _ -> mytell . failuer $ c
         
 

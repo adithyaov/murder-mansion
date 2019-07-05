@@ -114,12 +114,38 @@ testRunSwitch = do
 
 testRunMovement = do
   put initialGame
+  cmd "go north"
+  p <- player <$> get
+  acc "move success" $ p == Pool
+
+  put initialGame
+  acc "move fail" =<< cmdF "go south"
+
+  goTo LivingArea
+  putIn ExitKey Bag
+  cmd "go south"
+  p <- player <$> get
+  acc "move success exit" $ p == Exit
+
+  goTo MasterBedroom
+  cmd "hide under blue table"
+  acc "move fail visibility" =<< cmdF "go south"
+
+  cmd "unhide"
+  cmd "go north"
+  p <- player <$> get
+  acc "move success visibility" $ p == BathroomMasterBedroom
+
+  put initialGame
+  goTo Pool
+  acc "move fail bound" =<< cmdF "go north"
 
 main = do
   runComp initialGame testRunBag 
   runComp initialGame testRunHide
   runComp initialGame testRunMake
   runComp initialGame testRunSwitch
+  runComp initialGame testRunMovement
   return ()
 
 
