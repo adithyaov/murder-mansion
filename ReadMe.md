@@ -153,7 +153,7 @@ This module contains the actions that should occur during the player's turn.
 
 This module exports a simple AI murderer who randomly moves.
 
-## Screenshots
+# Screenshots
 
 ![Game Sample 1][game-run-sample]
 
