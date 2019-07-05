@@ -156,6 +156,7 @@ main = do
   runComp initialGame testRunMake
   runComp initialGame testRunSwitch
   runComp initialGame testRunMovement
+  putStrLn "Computation started, If you are prompted then test failed"
   (_, g) <- runComp initialGame testGameEnd
   putStrLn "Computation dosen't prompt, hence game ends"
   gameLoop g
