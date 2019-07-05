@@ -163,11 +163,11 @@ This module exports a simple AI murderer who randomly moves.
 
 ![game-run-sample-2]
 
-[game-run-sample]: images/game-run-sample.PNG "game-run-sample" { width:auto; max-width:90% }
+[game-run-sample]: screenshots/game-run-sample.PNG "game-run-sample" { width:auto; max-width:90% }
 
-[game-run-sample-3]: images/game-run-sample-3.PNG "game-run-sample-3" { width:auto; max-width:90% }
+[game-run-sample-3]: screenshots/game-run-sample-3.PNG "game-run-sample-3" { width:auto; max-width:90% }
 
-[game-run-sample-2]: images/game-run-sample-2.PNG "game-run-sample-2" { width:auto; max-width:90% }
+[game-run-sample-2]: screenshots/game-run-sample-2.PNG "game-run-sample-2" { width:auto; max-width:90% }
 
 
 
