@@ -1,6 +1,4 @@
-Title         : Murder Mansion
-
-[TITLE]
+# Murder Mansion
 
 # Game Idea
 
@@ -157,17 +155,17 @@ This module exports a simple AI murderer who randomly moves.
 
 ## Screenshots
 
-![game-run-sample]
+![Game Sample 1][game-run-sample]
 
-![game-run-sample-3]
+![Game Sample 2][game-run-sample-3]
 
-![game-run-sample-2]
+![Game Sample 3][game-run-sample-2]
 
-[game-run-sample]: screenshots/game-run-sample.PNG "game-run-sample" { width:auto; max-width:90% }
+[game-run-sample]: ./screenshots/game-run-sample.PNG "game-run-sample"
 
-[game-run-sample-3]: screenshots/game-run-sample-3.PNG "game-run-sample-3" { width:auto; max-width:90% }
+[game-run-sample-3]: ./screenshots/game-run-sample-3.PNG "game-run-sample-3"
 
-[game-run-sample-2]: screenshots/game-run-sample-2.PNG "game-run-sample-2" { width:auto; max-width:90% }
+[game-run-sample-2]: ./screenshots/game-run-sample-2.PNG "game-run-sample-2"
 
 
 
