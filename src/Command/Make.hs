@@ -38,4 +38,10 @@ make r c@(Make e) =
 
 -- A simple runner
 run :: Command -> GameEnv ()
-run = make recipies
+run c@(Make Mold) = do
+  (Game _ _ _ _ eL) <- get
+  when eL $ make recipies c
+  unless eL $ do
+    mytell . failuer $ c
+    mytell . info $ NoElecticity
+run x = make recipies x

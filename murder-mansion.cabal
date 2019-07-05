@@ -16,9 +16,18 @@ maintainer:          adi.obilisetty@gmail.com
 -- category:
 extra-source-files:  CHANGELOG.md
 
-executable murder-mansion
+executable murder-mansion-exe
   main-is:             Main.hs
-  other-modules:       Command
+  -- other-modules:
+  -- other-extensions:
+  build-depends:       base ^>=4.10.1.0
+                     , murder-mansion
+  hs-source-dirs:      exe
+  default-language:    Haskell2010
+
+library
+  exposed-modules:     Game
+                     , Command
                      , Game.Internal
                      , Command.Bag
                      , Command.Movement
@@ -32,8 +41,8 @@ executable murder-mansion
                      , Asset.Message
                      , Asset
                      , Game.Map
-                     , Game
                      , Murderer
+  -- other-modules: 
   -- other-extensions:
   build-depends:       base ^>=4.10.1.0
                      , containers
@@ -43,27 +52,16 @@ executable murder-mansion
   hs-source-dirs:      src
   default-language:    Haskell2010
 
--- test-suite murder-mansion
---   main-is:             Main.hs
---   type:                exitcode-stdio-1.0
---   other-modules:       Test.Command
---                      , Test.Game.Internal
---                      , Test.Command.Bag
---                      , Test.Command.Movement
---                      , Test.Command.Make
---                      , Test.Command.Hide
---                      , Test.Command.Switch
---                      , Test.Player
---                      , Test.Game.Map
---                      , Test.Game
---                      , Test.Murderer
---                      , Test
---   -- other-extensions:
---   build-depends:       base ^>=4.10.1.0
---                      , containers
---                      , bimap
---                      , transformers
---                      , random
---                      , murder-mansion
---   hs-source-dirs:      test
---   default-language:    Haskell2010
+test-suite murder-mansion-test
+  main-is:             Test.hs 
+  type:                exitcode-stdio-1.0
+  -- other-modules:       Test
+  -- other-extensions:
+  build-depends:       base ^>=4.10.1.0
+                     , containers
+                     , bimap
+                     , transformers
+                     , random
+                     , murder-mansion
+  hs-source-dirs:      test
+  default-language:    Haskell2010

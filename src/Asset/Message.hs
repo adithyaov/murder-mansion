@@ -13,6 +13,7 @@ data Error
 data InGameError
   = UnavailableAssetsError
   | UnPickableError
+  | NoElecticity
   | HiddenError deriving (Eq, Ord, Show)
 
 instance HasInfo Error where
@@ -23,6 +24,7 @@ instance HasInfo InGameError where
   info UnavailableAssetsError = "some assets that you need to perform this action are unavailable."
   info UnPickableError = "can't pick this item, it's unpickable."
   info HiddenError = "you are hidden, can't move while hidden."
+  info NoElecticity = "there is no electricity, first turn on the generator."
 
 instance HasInfo Help where
   info GameStart = "this is the begning of your journey. there is a murderer on the loose in this house and the house is locked. you need to somehow exit the house through the exit door. explore the house and find a way to escape."

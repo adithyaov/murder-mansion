@@ -3,9 +3,16 @@ module Command.Switch where
 
 import Control.Monad.Trans.RWS.Strict
 import Game.Internal
+import Control.Monad (when, unless)
 
 -- Basic data type for command.
 data Command = TurnOn Element | TurnOff Element
+
+instance ResponseMessage Command where
+  success (TurnOn e) = "successfully turned on " ++ fromAsset e
+  success (TurnOff e) = "successfully turned off " ++ fromAsset e
+  failuer (TurnOn e) = "couldn't turn on " ++ fromAsset e
+  failuer (TurnOff e) = "couldn't turn off " ++ fromAsset e
 
 -- A simple parser.
 parse :: [String] -> Maybe Command
@@ -19,12 +26,16 @@ parse _ = Nothing
 
 -- The runner which current only supports the switch for the generator.
 run :: Command -> GameEnv ()
-run (TurnOn Generator) = do
+run c@(TurnOn Generator) = do
   g <- get
-  put $ g { electricity = True }
-  mytell "The electricity is now swictched on."
-run (TurnOff Generator) = do
+  when (isAvailable Generator g) $ do
+    put $ g { electricity = True }
+    mytell . success $ c
+  unless (isAvailable Generator g) $ mytell . failuer $ c
+run c@(TurnOff Generator) = do
   g <- get
-  put $ g { electricity = False }
-  mytell "The electricity is now swictched off."
-run _ = mytell "Nope, Can't turn that on."
+  when (isAvailable Generator g) $ do
+    put $ g { electricity = False }
+    mytell . success $ c
+  unless (isAvailable Generator g) $ mytell . failuer $ c
+run c = mytell . failuer $ c

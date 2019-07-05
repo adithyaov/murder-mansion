@@ -6,9 +6,9 @@ import Control.Monad.Trans.RWS.Strict
 import Data.Bimap (Bimap)
 import qualified Data.Bimap as Bimap
 import Data.Map ((!))
-import Data.Map as Map
+import qualified Data.Map as Map
 import Game.Internal
-import Game.Map (positions)
+import Game.Map
 
 -- Basic directions the player can move.
 data Command
@@ -49,30 +49,27 @@ moveL :: GameMap -> House -> Command -> Maybe House
 moveL m x c =
   Bimap.lookupR x m >>= Just . moveC c >>= flip Bimap.lookup m
 
--- A runner that makes the valid movements and updates the state.
-run :: Command -> GameEnv ()
-run c = do
-  (Game p v m eM e) <- get
-  let storageCheck = eM ! StorageKey == Bag
-      exitCheck = eM ! ExitKey == Bag
-      visibilityCheck = v
-      successRun nL = do
-        put $ Game nL v m eM e
+-- Enter is a function which checks requirements prior entry
+enter :: GameMap -> EntryRequirementMap -> Command -> GameEnv ()
+enter gM eRM c = do
+  g@(Game p v m eM e) <- get
+  let successRun nL = do
+        put $ g { player = nL }
         mytell . success $ c
         mytell $ "you're currently in " ++ fromAsset nL
         mytell . info $ nL
         mytell "the following are the items in the room:"
         describe nL
-      runStorageRoom nL = do
-        when storageCheck $ successRun nL
-        unless storageCheck $ mytell . info . InGameError $ UnavailableAssetsError
-  unless visibilityCheck $
-    mytell . info . InGameError $ HiddenError
-  when visibilityCheck $ case (p, moveL positions p c) of
-    (_, Nothing) -> mytell . failuer $ c
-    (StorageRoom, Just nL) -> runStorageRoom nL
-    (_, Just StorageRoom) -> runStorageRoom StorageRoom
-    (_, Just Exit) -> do
-      when exitCheck $ successRun Exit
-      unless exitCheck $ mytell . info . InGameError $ UnavailableAssetsError
-    (_, Just nL) -> successRun nL
+  case (v, p, moveL positions p c, flip Map.lookup eRM =<< moveL gM p c) of
+    (False, _, _,  _) -> mytell . info $ HiddenError
+    (True, x, Just y, Nothing) -> successRun y
+    (True, x, Just y, Just zs) -> do
+      let haveEverything = foldr ((&&) . flip isAvailable g) True zs
+      when haveEverything $ successRun y
+      unless haveEverything $ mytell . info $ UnavailableAssetsError
+    _ -> mytell . failuer $ c
+        
+
+-- A runner that makes the valid movements and updates the state.
+run :: Command -> GameEnv ()
+run = enter positions entryRequirements

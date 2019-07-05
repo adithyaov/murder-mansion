@@ -17,7 +17,7 @@ data Game = Game
   , murderer :: House
   , elementMap :: Map Element Location
   , electricity :: Bool
-  } deriving (Show)
+  } deriving (Show, Eq)
 
 -- The environment of the game state is a standard RWS monad over IO.
 type GameEnv = RWST () String Game IO
@@ -25,8 +25,11 @@ type GameEnv = RWST () String Game IO
 -- The type of a map in the game
 type GameMap = Bimap (Int, Int, Int) House
 
--- The type of a map in the game
+-- type of recipe map
 type RecipeMap = Map Element [Either Element Element]
+
+-- type of some entry requirement encoding
+type EntryRequirementMap = Map House [Element]
 
 initialPlayerLocation = LivingArea
 
@@ -41,6 +44,12 @@ recipies =
   Map.fromList
     [ (ExitKey, [Left Mold, Left Steel, Right Furnace, Left Oil, Left Lighter])
     , (Mold, [Right ChemicalChamber, Left GasZ, Left Clay]) ]
+
+-- Entry requirements
+entryRequirements =
+  Map.fromList
+    [ (Exit, [ExitKey])
+    , (StorageRoom, [StorageKey]) ]
 
 -- The initial location of all the elements.
 initialElementLocation =

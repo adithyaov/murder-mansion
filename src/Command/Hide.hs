@@ -27,10 +27,12 @@ parse _ = Nothing
 
 -- The runner to execute the functionality.
 run :: Command -> GameEnv ()
-run c@(Hide _) = do
+run c@(Hide e) = do
   g <- get
-  put $ g { visibility = False }
-  mytell . success $ c
+  when (isAvailable e g) $ do
+    put $ g { visibility = False }
+    mytell . success $ c
+  unless (isAvailable e g) $ mytell . failuer $ c
 run c@Unhide = do
   g <- get
   put $ g { visibility = True }
