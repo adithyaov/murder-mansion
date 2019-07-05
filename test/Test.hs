@@ -8,32 +8,34 @@ import qualified Data.Map as Map
 import Control.Monad.IO.Class (liftIO)
 import Game
 
-mkState s = put s >> get
-
+-- A simple method to run a test command
 cmd = run . fromMaybe NOP . parse . words
 
+-- A simple method to check a wrong command
 cmdF x = do
   s1 <- get
   cmd x
   s2 <- get
   return $ s1 == s2
 
-eqState s = (== s) <$> get
-
+-- A helper for changing position of player
 goTo l = do
   s <- get
   put $ s { player = l }
 
+-- A helper for putting items in location
 putIn e l = do
   s <- get
   put $ s { elementMap = Map.insert e l $ elementMap s }
 
+-- The main assertion tool
 acc :: String -> Bool -> GameEnv ()
 acc s True = liftIO . putStrLn $ "OK: " ++ s
 acc s False = do
   liftIO . putStrLn $ "FAIL: " ++ s
   error $ "FAIL: " ++ s
 
+-- tests for Command.Bag
 testRunBag :: GameEnv ()
 testRunBag = do
   put initialGame
@@ -56,6 +58,7 @@ testRunBag = do
 
   return ()
 
+-- tests for Command.Hide
 testRunHide = do
   put initialGame
   goTo MasterBedroom
@@ -70,6 +73,7 @@ testRunHide = do
   put initialGame
   acc "hide fail" =<< cmdF "hide under blue table"
 
+-- tests for Command.Make
 testRunMake = do
   put initialGame
   Mold `putIn` Bag
@@ -94,6 +98,7 @@ testRunMake = do
   put initialGame
   acc "make fail" =<< cmdF "make exit key"
 
+-- tests for Command.Switch
 testRunSwitch = do
   put initialGame
   goTo GeneratorRoom
@@ -112,6 +117,7 @@ testRunSwitch = do
   goTo ChemistryLab
   acc "turn on fail" =<< cmdF "turn on generator"
 
+-- Tests for Command.Movement
 testRunMovement = do
   put initialGame
   cmd "go north"
@@ -140,12 +146,19 @@ testRunMovement = do
   goTo Pool
   acc "move fail bound" =<< cmdF "go north"
 
+testGameEnd = do
+  put initialGame
+  goTo ChemistryLab
+
 main = do
   runComp initialGame testRunBag 
   runComp initialGame testRunHide
   runComp initialGame testRunMake
   runComp initialGame testRunSwitch
   runComp initialGame testRunMovement
+  (_, g) <- runComp initialGame testGameEnd
+  putStrLn "Computation dosen't prompt, hence game ends"
+  gameLoop g
   return ()
 
 
